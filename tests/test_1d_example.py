@@ -1,14 +1,11 @@
 import pytest
-import numpy as np
 import pandas as pd
 
 from pyboretum import (
-    LinkedTree,
     MeanNode,
     MedianNode,
     splitters,  # MAE and MSE splitters
     DecisionTree,
-    TrainingData,
 )
 
 

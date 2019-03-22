@@ -1,5 +1,8 @@
+from __future__ import absolute_import
+
 import numpy as np
-from base import (
+
+from .base import (
     Splitter,
     return_no_split,
 )

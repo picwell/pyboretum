@@ -1,6 +1,7 @@
-from pyboretum import TrainingData
 import numpy as np
 import pandas as pd
+
+from pyboretum import TrainingData
 
 
 def test_training_data_turns_pandas_to_numpy(training_data_1d):
@@ -16,18 +17,18 @@ def test_training_data_keeps_columns_and_index(training_data_1d):
     training_data = TrainingData(X, Y)
 
     if isinstance(X, pd.DataFrame):
-        assert training_data.X_names == ['x']
+        assert list(training_data.X_names) == ['x']
         assert training_data.index.tolist() == X.index.tolist()
     else:
-        assert training_data.X_names == [0]
-        assert training_data.index.tolist() == range(len(X))
+        assert list(training_data.X_names) == [0]
+        assert training_data.index.tolist() == list(range(len(X)))
 
 
 def test_training_data_from_numpy_defaults_indices(training_data_numpy):
     training_data = TrainingData(*training_data_numpy)
 
-    assert training_data.index.tolist() == range(12)
-    assert training_data.X_names == [0]
+    assert training_data.index.tolist() == list(range(12))
+    assert list(training_data.X_names) == [0]
 
 
 def test_get_descendants(training_data_1d):
@@ -38,11 +39,11 @@ def test_get_descendants(training_data_1d):
     if isinstance(X, pd.DataFrame):
         assert left.index.tolist() == X.index[:6].tolist()
         assert right.index.tolist() == X.index[6:].tolist()
-        assert left.X_names == right.X_names == training_data.X_names
+        assert list(left.X_names) == list(right.X_names) == list(training_data.X_names)
     else:
-        assert left.index.tolist() == range(6)
-        assert right.index.tolist() == range(6, 12)
-        assert left.X_names == right.X_names == [0]
+        assert left.index.tolist() == list(range(6))
+        assert right.index.tolist() == list(range(6, 12))
+        assert list(left.X_names) == list(right.X_names) == [0]
 
 
 def test_1d_Y_is_transformed_to_2d():

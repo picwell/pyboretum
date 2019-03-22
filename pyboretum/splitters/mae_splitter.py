@@ -1,9 +1,11 @@
+from __future__ import absolute_import
+
 import math
 import numpy as np
 import operator
 from sortedcontainers import SortedList
 
-from base import (
+from .base import (
     Splitter,
     return_no_split,
 )

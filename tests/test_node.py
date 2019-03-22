@@ -5,7 +5,6 @@ import numpy as np
 from pyboretum import (
     get_node_class,
     MeanNode,
-    MedianNode,
     TrainingData,
 )
 

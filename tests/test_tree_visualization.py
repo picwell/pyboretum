@@ -1,10 +1,8 @@
 from pyboretum import (
-    LinkedTree,
-    MeanNode,
-    splitters,  # MAE and MSE splitters
+    splitters,
     DecisionTree,
-    TrainingData,
 )
+
 
 def test_tree_returns_node_and_edges(training_data_1d):
     X, y = training_data_1d
