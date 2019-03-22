@@ -1,5 +1,7 @@
 # pyboretum
-Framework to explore and analyze custom decision trees in Python
+[![CircleCI](https://circleci.com/gh/picwell/pyboretum/tree/master.svg?style=svg)](https://circleci.com/gh/picwell/pyboretum/tree/master)
+
+Fertile grounds to explore and analyze custom decision trees in Python
 
 ## Overview
 
