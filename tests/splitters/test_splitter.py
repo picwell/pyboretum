@@ -1,6 +1,9 @@
 import pytest
 
-from pyboretum import splitters, TrainingData
+from pyboretum import (
+    splitters,
+    TrainingData,
+)
 
 
 @pytest.mark.parametrize('splitter', [

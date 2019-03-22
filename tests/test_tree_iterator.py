@@ -4,10 +4,9 @@ import pytest
 from pyboretum import (
     LinkedTree,
     ListTree,
-    get_node_class,
     MeanNode,
-    MedianNode,
 )
+
 
 @pytest.fixture()
 def test_nodes():

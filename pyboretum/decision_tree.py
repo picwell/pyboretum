@@ -1,10 +1,11 @@
-from splitters import MSESplitter
-from tree import LinkedTree
-from node import MeanNode
 from graphviz import Digraph
 import numpy as np
 import pandas as pd
-from training_data import TrainingData
+
+from pyboretum.splitters import MSESplitter
+from pyboretum.tree import LinkedTree
+from pyboretum.node import MeanNode
+from pyboretum.training_data import TrainingData
 
 
 class DecisionTree(object):

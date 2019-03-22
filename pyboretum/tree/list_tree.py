@@ -1,8 +1,12 @@
+from __future__ import absolute_import
+
+import math
+
 from .base import (
     Tree,
     TreeIterator,
 )
-import math
+
 
 def _get_left_index(node_index):
     return 2 * node_index + 1

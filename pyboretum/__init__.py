@@ -1,5 +1,7 @@
+from __future__ import absolute_import
+
 from .decision_tree import DecisionTree
-import splitters
+from . import splitters
 from .node import (
     get_node_class,
     MeanNode,

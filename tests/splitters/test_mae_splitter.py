@@ -1,4 +1,7 @@
-from pyboretum import splitters, TrainingData
+from pyboretum import (
+    splitters,
+    TrainingData,
+)
 
 
 def test_mae_splitter(training_data_1d):

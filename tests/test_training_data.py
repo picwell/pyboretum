@@ -1,6 +1,7 @@
-from pyboretum import TrainingData
 import numpy as np
 import pandas as pd
+
+from pyboretum import TrainingData
 
 
 def test_training_data_turns_pandas_to_numpy(training_data_1d):
