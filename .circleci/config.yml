@@ -49,29 +49,29 @@ jobs:
           path: test-reports
       - store_artifacts:
           path: test-reports
-#  test_python3:
-#    docker:
-#      - image: circleci/python:3.7
-#    working_directory: ~/repo
-#    steps:
-#      - checkout
-#      - run:
-#          name: Install Python deps in a venv
-#          command: |
-#            mkdir -p ./venv
-#            virtualenv ./venv
-#            source venv/bin/activate
-#            pip install -U pip wheel
-#            pip install --index-url https://${FURY_DEPLOY_TOKEN}@pypi.fury.io/picwell/ --extra-index-url https://pypi.org/simple/ .
-#      - run:
-#          name: Run unit tests
-#          command: |
-#            source venv/bin/activate
-#            python setup.py test --addopts '--durations=10 --junitxml=test-reports/junit.xml'
-#      - store_test_results:
-#          path: test-reports
-#      - store_artifacts:
-#          path: test-reports
+  test_python3:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Install Python deps in a venv
+          command: |
+            mkdir -p ./venv
+            virtualenv ./venv
+            source venv/bin/activate
+            pip install -U pip wheel
+            pip install --index-url https://${FURY_DEPLOY_TOKEN}@pypi.fury.io/picwell/ --extra-index-url https://pypi.org/simple/ .
+      - run:
+          name: Run unit tests
+          command: |
+            source venv/bin/activate
+            python setup.py test --addopts '--durations=10 --junitxml=test-reports/junit.xml'
+      - store_test_results:
+          path: test-reports
+      - store_artifacts:
+          path: test-reports
   upload_artifact:
     docker:
       - image: circleci/python:2
@@ -93,14 +93,14 @@ workflows:
           context: gemfury-pull
       - test:
           context: gemfury-pull
-#      - test_python3:
-#          context: gemfury-pull
+      - test_python3:
+          context: gemfury-pull
       - upload_artifact:
           context: gemfury-push
           requires:
             - build
             - test
-#            - test_python3
+            - test_python3
           filters:
             branches:
               only:
