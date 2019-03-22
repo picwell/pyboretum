@@ -1,0 +1,5 @@
+# This defines who is required to review the changes.
+# For more info on the CODEOWNERS file, see https://help.github.com/articles/about-codeowners/
+
+# All changes require review by a user in the @picwell/core-services group
+*   @picwell/core-services
