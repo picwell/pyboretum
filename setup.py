@@ -24,6 +24,7 @@ setup(
     ],
     install_requires=[
         'sortedcontainers',
+        'graphviz',
         'pandas',  # TODO; limit this to numpy eventually?
     ],
     tests_require=[
