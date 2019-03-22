@@ -1,5 +1,5 @@
 import numpy as np
-from splitter import (
+from base import (
     Splitter,
     return_no_split,
 )

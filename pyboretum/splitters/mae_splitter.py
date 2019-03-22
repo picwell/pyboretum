@@ -3,7 +3,7 @@ import numpy as np
 import operator
 from sortedcontainers import SortedList
 
-from splitter import (
+from base import (
     Splitter,
     return_no_split,
 )
