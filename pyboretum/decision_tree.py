@@ -24,33 +24,31 @@ class DecisionTree(object):
         self.Y_names = None
 
     def _build_node(self, splitter, training_data):
-        feature, threshold, cost = splitter.select_feature_to_cut(training_data.X,
-                                                                  training_data.Y,
-                                                                  self.min_samples_leaf)
+        coeffs, threshold, cost = splitter.select_feature_to_cut(training_data.X,
+                                                                 training_data.Y,
+                                                                 self.min_samples_leaf)
 
         # TODO: this needs to be enabled later when statistical tests are used to select variables.
         # if threshold is None:
         #     threshold, cost = self.splitter.get_best_cutpoint()
 
-        node = self.node_class(training_data.X, training_data.Y, feature, threshold, training_data.index)
+        node = self.node_class(training_data.X, training_data.Y, coeffs, threshold, training_data.index)
 
         return node
 
-    def _fit_core(self, splitter, node_id, training_data, feature, threshold, depth):
-        if depth == self.max_depth or feature is None:
+    def _fit_core(self, splitter, node_id, node, training_data, depth):
+        if depth == self.max_depth or node.coeffs is None:
             return
         else:
-            left_data, right_data = training_data.get_descendants(feature, threshold)
+            left_data, right_data = training_data.get_descendants(node)
 
             left_node = self._build_node(splitter, left_data)
             right_node = self._build_node(splitter, right_data)
 
             left_id, right_id = self.tree.insert_children(node_id, left_node, right_node)
 
-            self._fit_core(splitter, left_id, left_data,
-                           left_node.feature, left_node.threshold, depth + 1)
-            self._fit_core(splitter, right_id, right_data,
-                           right_node.feature, right_node.threshold, depth + 1)
+            self._fit_core(splitter, left_id, left_node, left_data, depth + 1)
+            self._fit_core(splitter, right_id, right_node, right_data, depth + 1)
 
     def fit(self, X, Y, splitter=None):
         """
@@ -71,8 +69,7 @@ class DecisionTree(object):
         root_node = self._build_node(splitter, training_data)
         self.tree = self.tree_class(root_node)
 
-        self._fit_core(splitter, self.tree.get_root_id(), training_data,
-                       root_node.feature, root_node.threshold, 0)
+        self._fit_core(splitter, self.tree.get_root_id(), root_node, training_data, 0)
 
     def _get_leaf_node(self, x_row):
         """
@@ -150,10 +147,10 @@ class DecisionTree(object):
         if node.is_leaf():
             label = str('N Samples: {}\nAvg y: ${}'.format(node.n_samples,getattr(node, self.pred_str)))
         else:
-            feature_name = self.X_names[node.feature]
+            feature_names = [feature_name for feature_name, coeff in zip(self.X_names, node.coeffs) if coeff != 0.0]
             label = str('N Samples: {}\nAvg y: ${}\n\nFeature: {}\nThreshold: {}'.format(node.n_samples,
                                                                                          getattr(node, self.pred_str),
-                                                                                         feature_name,
+                                                                                         feature_names,
                                                                                          node.threshold)
                         )
         return label

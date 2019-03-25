@@ -1,7 +1,10 @@
 import numpy as np
 import pandas as pd
 
-from pyboretum import TrainingData
+from pyboretum import (
+    TrainingData,
+    MeanNode,
+)
 
 
 def test_training_data_turns_pandas_to_numpy(training_data_1d):
@@ -34,7 +37,9 @@ def test_training_data_from_numpy_defaults_indices(training_data_numpy):
 def test_get_descendants(training_data_1d):
     X, Y = training_data_1d
     training_data = TrainingData(X, Y)
-    left, right = training_data.get_descendants(0, 5.5)
+
+    node = MeanNode(X, Y, np.array([1.0]), 5.5)
+    left, right = training_data.get_descendants(node)
 
     if isinstance(X, pd.DataFrame):
         assert left.index.tolist() == X.index[:6].tolist()

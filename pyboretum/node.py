@@ -9,9 +9,18 @@ class Node(object):
     # Save indices when creating a node object:
     SAVE_IDS = False
 
-    def __init__(self,  X, Y, feature, threshold, saved_ids=None):
+    def __init__(self,  X, Y, coeffs, threshold, saved_ids=None):
+        """
+        Our decision rule should look like
+           f = coeff[0]*feature[0] + coeff[1]*feature[1] + ... + coeff[p]*feature[p]
+
+        Go to left if f <= threshold.
+
+        We will only allow hyperplane cuts. For a nonlinear cut, we should consider coupling this
+        with kernel methods.
+        """
         self.n_samples = len(X)
-        self.feature = feature
+        self.coeffs = coeffs
         self.threshold = threshold
 
         if self.SAVE_IDS:
@@ -29,13 +38,13 @@ class Node(object):
             if feature is boolean: left means X[node.feature] is False, right -> True
             if feature is category: left means X[node.feature] in node.threshold
         """
-        if x_row[self.feature] <= self.threshold:
+        if (self.coeffs * x_row).sum() <= self.threshold:
             return 'left'
         else:
             return 'right'
 
     def is_leaf(self):
-        return self.feature is None
+        return self.coeffs is None
 
 
 # Sample Node implementations:

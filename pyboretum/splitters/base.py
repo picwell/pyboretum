@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def return_no_split():
     return None, float('inf')
 
@@ -54,13 +57,20 @@ class Splitter(object):
         :return: a tuple of (feature, cutpoint, cost). The cutpoint and cost can be None, and
                  float(inf), respectively, if the variable selection algorithm does not cut as well.
         """
-        best_feature = None
+        best_idx = None
         best_cutpoint, best_cost = return_no_split()
 
-        for feature in range(X.shape[1]):
-            cutpoint, cost = self.get_best_cutpoint(X[:, feature], y, min_samples_leaf)
+        for idx in range(X.shape[1]):
+            cutpoint, cost = self.get_best_cutpoint(X[:, idx], y, min_samples_leaf)
             if cutpoint is not None and cost < best_cost:
-                best_feature = feature
+                best_idx = idx
                 best_cutpoint, best_cost = cutpoint, cost
 
-        return best_feature, best_cutpoint, best_cost
+        if best_idx is None:
+            return None, best_cutpoint, best_cost
+        else:
+            # Build coefficient:
+            coeffs = np.zeros(X.shape[1])
+            coeffs[best_idx] = 1.0
+
+            return coeffs, best_cutpoint, best_cost

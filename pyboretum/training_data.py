@@ -57,8 +57,8 @@ class TrainingData(object):
         else:
             raise TypeError("Input X must be pandas dataframe or numpy array.")
 
-    def get_descendants(self, feature, threshold):
-        left_mask = self.X[:, feature] <= threshold
+    def get_descendants(self, node):
+        left_mask = np.matmul(self.X, node.coeffs) <= node.threshold
         right_mask = ~left_mask
 
         left_data = TrainingData(self.X[left_mask], self.Y[left_mask], self.index[left_mask], self.X_names)
