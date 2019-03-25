@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from pyboretum import (
-    get_node_class,
+    Node,
     MeanNode,
     TrainingData,
 )
@@ -25,10 +25,11 @@ def test_Y():
 
 
 def test_node_can_evaluate_mean_and_median(test_X, test_Y):
-    BasicNode = get_node_class('BasicNode', Y_funs={
-        'mean': np.mean,
-        'median': np.median,
-    })
+    class BasicNode(Node):
+        Y_FUNS={
+            'mean': np.mean,
+            'median': np.median,
+        }
 
     training_data = TrainingData(test_X, test_Y)
 
@@ -53,9 +54,11 @@ def test_node_stores_row_indices_from_X(test_X, test_Y):
     assert not hasattr(node, 'median')
 
     # TODO: can this definition be made simpler by building on top of MedianNode?
-    EnhancedNode = get_node_class('EnhancedNode', Y_funs={
-        'median': np.median,
-    }, save_ids=True)
+    class EnhancedNode(Node):
+        Y_FUNS={
+                   'median': np.median,
+               }
+        SAVE_IDS=True
 
     training_data = TrainingData(test_X, test_Y)
 

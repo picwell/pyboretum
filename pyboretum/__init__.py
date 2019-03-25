@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from .decision_tree import DecisionTree
 from . import splitters
 from .node import (
-    get_node_class,
+    Node,
     MeanNode,
     MedianNode,
     MeanMedianAnalysisNode,
