@@ -106,7 +106,8 @@ class DecisionTree(object):
 
     def predict(self, X, pred_str=None):
         if isinstance(X, pd.DataFrame):
-            X_np = X.values
+            # Match column order with the training data:
+            X_np = X[self.X_names].values
         else:
             X_np = X
 
