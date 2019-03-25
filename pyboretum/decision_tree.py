@@ -32,8 +32,7 @@ class DecisionTree(object):
         # if threshold is None:
         #     threshold, cost = self.splitter.get_best_cutpoint()
 
-        node = self.node_class(training_data.X, training_data.Y, feature, threshold, training_data.index,
-                               feature_name='leaf' if feature is None else training_data.X_names[feature])
+        node = self.node_class(training_data.X, training_data.Y, feature, threshold, training_data.index)
 
         return node
 
@@ -150,10 +149,11 @@ class DecisionTree(object):
         if node.is_leaf():
             label = str('N Samples: {}\nAvg y: ${}'.format(node.n_samples,getattr(node, self.pred_str)))
         else:
+            feature_name = self.X_names[node.feature]
             label = str('N Samples: {}\nAvg y: ${}\n\nFeature: {}\nThreshold: {}'.format(node.n_samples,
-                                                                                              getattr(node, self.pred_str),
-                                                                                              node.feature_name,
-                                                                                              node.threshold)
+                                                                                         getattr(node, self.pred_str),
+                                                                                         feature_name,
+                                                                                         node.threshold)
                         )
         return label
 

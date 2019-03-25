@@ -9,11 +9,10 @@ class Node(object):
     # Save indices when creating a node object:
     SAVE_IDS = False
 
-    def __init__(self,  X, Y, feature, threshold, saved_ids=None, feature_name=None):
+    def __init__(self,  X, Y, feature, threshold, saved_ids=None):
         self.n_samples = len(X)
         self.feature = feature
         self.threshold = threshold
-        self.feature_name = feature_name
 
         if self.SAVE_IDS:
             self.saved_ids = saved_ids
