@@ -79,7 +79,7 @@ class DecisionTree(object):
         iterator = self.tree.get_iterator()
         while not iterator.is_leaf():
             node, _ = iterator.get_node()
-            branch = node.take_left(x_row)
+            branch = node.should_take_left(x_row)
 
             if branch:
                 iterator.left_child()

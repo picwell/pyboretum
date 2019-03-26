@@ -32,7 +32,7 @@ class Node(object):
         for key, fun in self.Y_FUNS.items():
             self.__dict__[key] = fun(Y, axis=0)
 
-    def take_left(self, X):
+    def should_take_left(self, X):
         """
         if feature is numeric: left means X feature value is < node split value
                                right means X feature >= node split

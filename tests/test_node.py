@@ -73,10 +73,10 @@ def test_node_stores_row_indices_from_X(test_X, test_Y):
 
 def test_is_branch(test_X, test_Y):
     node = MeanNode(test_X, test_Y, np.array([1.0, 0.0]), 1.5)
-    assert list(node.take_left(test_X.values)) == [True, False, False]
+    assert list(node.should_take_left(test_X.values)) == [True, False, False]
 
     node = MeanNode(test_X, test_Y, np.array([0.0, 1.0]), 25)
-    assert list(node.take_left(test_X.values)) == [True, True, False]
+    assert list(node.should_take_left(test_X.values)) == [True, True, False]
 
 
 def test_get_label(test_X, test_Y):

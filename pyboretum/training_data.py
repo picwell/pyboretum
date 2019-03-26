@@ -58,7 +58,7 @@ class TrainingData(object):
             raise TypeError("Input X must be pandas dataframe or numpy array.")
 
     def get_descendants(self, node):
-        mask = node.take_left(self.X)
+        mask = node.should_take_left(self.X)
         left_data = TrainingData(self.X[mask, :],
                                  self.Y[mask, :],
                                  self.index[mask],
