@@ -103,8 +103,14 @@ class DecisionTree(object):
 
     def predict(self, X, pred_str=None):
         if isinstance(X, pd.DataFrame):
+            # TODO: this needs to be tested
             # Match column order with the training data:
+            missing_columns = [name for name in self.X_names if name not in X.columns]
+            if missing_columns:
+                raise ValueError('Following columns are missing from X: {}'.format(missing_columns))
+
             X_np = X[self.X_names].values
+            
         else:
             X_np = X
 
