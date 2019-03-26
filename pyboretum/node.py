@@ -39,8 +39,8 @@ class Node(object):
 
     def should_take_left(self, X):
         """
-        if feature is numeric: left means X feature value is < node split value
-                               right means X feature >= node split
+        if feature is numeric: left means X feature value is <= node split value
+                               right means X feature > node split
         if feature is boolean: left means X[node.feature] is False, right -> True
         if feature is category: left means X[node.feature] in node.threshold
 
