@@ -71,18 +71,12 @@ def test_node_stores_row_indices_from_X(test_X, test_Y):
     assert node.saved_ids.tolist() == ['row_0', 'row_1', 'row_2']
 
 
-def test_which_branch(test_X, test_Y):
+def test_is_branch(test_X, test_Y):
     node = MeanNode(test_X, test_Y, np.array([1.0, 0.0]), 1.5)
-
-    assert node.which_branch(test_X.iloc[0]) == 'left'
-    assert node.which_branch(test_X.iloc[1]) == 'right'
-    assert node.which_branch(test_X.iloc[2]) == 'right'
+    assert list(node.take_left(test_X.values)) == [True, False, False]
 
     node = MeanNode(test_X, test_Y, np.array([0.0, 1.0]), 25)
-
-    assert node.which_branch(test_X.iloc[0]) == 'left'
-    assert node.which_branch(test_X.iloc[1]) == 'left'
-    assert node.which_branch(test_X.iloc[2]) == 'right'
+    assert list(node.take_left(test_X.values)) == [True, True, False]
 
 
 def test_get_label(test_X, test_Y):

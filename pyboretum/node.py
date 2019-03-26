@@ -16,6 +16,11 @@ class Node(object):
 
         where h represents a hyperplane in p dimensions. For a general nonlinear cut, we should
         consider combinding this with kernel methods.
+
+        :param X, Y: numpy matrices
+        :param coeffs: numpy array or None
+        :param threshold: float or None
+        :param saved_ids: List of IDs
         """
         self.n_samples = len(X)
         self.coeffs = coeffs
@@ -27,19 +32,17 @@ class Node(object):
         for key, fun in self.Y_FUNS.items():
             self.__dict__[key] = fun(Y, axis=0)
 
-    def which_branch(self, x_row):
+    def take_left(self, X):
         """
-        :param x_row: new sample (a row of X) to pass through the split point
-        :return: 'left' or 'right' indicating decision at split point
-            if feature is numeric: left means X feature value is < node split value
-                                   right means X feature >= node split
-            if feature is boolean: left means X[node.feature] is False, right -> True
-            if feature is category: left means X[node.feature] in node.threshold
+        if feature is numeric: left means X feature value is < node split value
+                               right means X feature >= node split
+        if feature is boolean: left means X[node.feature] is False, right -> True
+        if feature is category: left means X[node.feature] in node.threshold
+
+        :param X: numpy matrix
+        :return: Boolean numpy array
         """
-        if (self.coeffs * x_row).sum() <= self.threshold:
-            return 'left'
-        else:
-            return 'right'
+        return np.matmul(X, self.coeffs) <= self.threshold
 
     def is_leaf(self):
         return self.coeffs is None
