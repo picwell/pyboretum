@@ -59,7 +59,6 @@ class TrainingData(object):
 
     def get_descendants(self, node):
         mask = node.take_left(self.X)
-        print mask.shape
         left_data = TrainingData(self.X[mask, :],
                                  self.Y[mask, :],
                                  self.index[mask],
