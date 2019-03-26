@@ -90,3 +90,6 @@ def test_mae_tree(training_data_1d):
         begin_idx = 3*group_id
         end_idx = 3*group_id + 2
         assert len(set(node_ids[begin_idx:end_idx])) == 1
+
+
+#TODO: write a test where training X is a dataframe, and the predicting X has a different column order.

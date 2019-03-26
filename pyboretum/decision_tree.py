@@ -24,34 +24,31 @@ class DecisionTree(object):
         self.Y_names = None
 
     def _build_node(self, splitter, training_data):
-        feature, threshold, cost = splitter.select_feature_to_cut(training_data.X,
-                                                                  training_data.Y,
-                                                                  self.min_samples_leaf)
+        coeffs, threshold, cost = splitter.select_feature_to_cut(training_data.X,
+                                                                 training_data.Y,
+                                                                 self.min_samples_leaf)
 
         # TODO: this needs to be enabled later when statistical tests are used to select variables.
         # if threshold is None:
         #     threshold, cost = self.splitter.get_best_cutpoint()
 
-        node = self.node_class(training_data.X, training_data.Y, feature, threshold, training_data.index,
-                               feature_name='leaf' if feature is None else training_data.X_names[feature])
+        node = self.node_class(training_data.X, training_data.Y, coeffs, threshold, training_data.index)
 
         return node
 
-    def _fit_core(self, splitter, node_id, training_data, feature, threshold, depth):
-        if depth == self.max_depth or feature is None:
+    def _fit_core(self, splitter, node_id, node, training_data, depth):
+        if depth == self.max_depth or node.coeffs is None:
             return
         else:
-            left_data, right_data = training_data.get_descendants(feature, threshold)
+            left_data, right_data = training_data.get_descendants(node)
 
             left_node = self._build_node(splitter, left_data)
             right_node = self._build_node(splitter, right_data)
 
             left_id, right_id = self.tree.insert_children(node_id, left_node, right_node)
 
-            self._fit_core(splitter, left_id, left_data,
-                           left_node.feature, left_node.threshold, depth + 1)
-            self._fit_core(splitter, right_id, right_data,
-                           right_node.feature, right_node.threshold, depth + 1)
+            self._fit_core(splitter, left_id, left_node, left_data, depth + 1)
+            self._fit_core(splitter, right_id, right_node, right_data, depth + 1)
 
     def fit(self, X, Y, splitter=None):
         """
@@ -72,8 +69,7 @@ class DecisionTree(object):
         root_node = self._build_node(splitter, training_data)
         self.tree = self.tree_class(root_node)
 
-        self._fit_core(splitter, self.tree.get_root_id(), training_data,
-                       root_node.feature, root_node.threshold, 0)
+        self._fit_core(splitter, self.tree.get_root_id(), root_node, training_data, 0)
 
     def _get_leaf_node(self, x_row):
         """
@@ -83,9 +79,9 @@ class DecisionTree(object):
         iterator = self.tree.get_iterator()
         while not iterator.is_leaf():
             node, _ = iterator.get_node()
-            branch = node.which_branch(x_row)
+            branch = node.should_take_left(x_row)
 
-            if branch == 'left':
+            if branch:
                 iterator.left_child()
             else:
                 iterator.right_child()
@@ -107,7 +103,14 @@ class DecisionTree(object):
 
     def predict(self, X, pred_str=None):
         if isinstance(X, pd.DataFrame):
-            X_np = X.values
+            # TODO: this needs to be tested
+            # Match column order with the training data:
+            missing_columns = [name for name in self.X_names if name not in X.columns]
+            if missing_columns:
+                raise ValueError('Following columns are missing from X: {}'.format(missing_columns))
+
+            X_np = X[self.X_names].values
+            
         else:
             X_np = X
 
@@ -128,7 +131,7 @@ class DecisionTree(object):
     def _get_nodes_and_edges(self, node_id, max_depth):
         node, depth = self.tree.get_node(node_id)
 
-        if (node.is_leaf() or depth >= max_depth):
+        if node.is_leaf() or depth >= max_depth:
             return [node_id], []
         else:
             left_id, right_id = self.tree.get_children_ids(node_id)
@@ -145,18 +148,6 @@ class DecisionTree(object):
 
         return nodes, edges
 
-    def _get_node_label(self, node):
-        # TODO: Re-write this, likely as a method on node class, once we figure out node-pred_str interface
-        if node.is_leaf():
-            label = str('N Samples: {}\nAvg y: ${}'.format(node.n_samples,getattr(node, self.pred_str)))
-        else:
-            label = str('N Samples: {}\nAvg y: ${}\n\nFeature: {}\nThreshold: {}'.format(node.n_samples,
-                                                                                              getattr(node, self.pred_str),
-                                                                                              node.feature_name,
-                                                                                              node.threshold)
-                        )
-        return label
-
     def visualize_tree(self, max_depth=float('inf')):
         dot = Digraph(graph_attr=dict(size="12,12"))
         nodes, edges = self.get_nodes_and_edges(max_depth)
@@ -170,10 +161,16 @@ class DecisionTree(object):
                 color = 'burlywood3'
             else:
                 color = 'burlywood'
-            dot.node(str(node_id), label=self._get_node_label(node), style='filled',
-                    shape=shape, color=color)
+            dot.node(str(node_id),
+                     label=node.get_label(self.pred_str, self.X_names),
+                     style='filled',
+                     shape=shape,
+                     color=color)
 
         for (e1, e2, label) in edges:
-            dot.edge(str(e1), str(e2), label=label, fontsize='25')
+            dot.edge(str(e1),
+                     str(e2),
+                     label=label,
+                     fontsize='25')
 
         return dot

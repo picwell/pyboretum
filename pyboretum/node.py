@@ -1,70 +1,91 @@
 import numpy as np
 
 
-# The current implementation is similar to collections.namedtuple.
-def get_node_class(class_name, X_funs=None, Y_funs=None, save_ids=False):
-    """
-    :param class_name: name of the class
-    :param X_funs: a Dict of name to functions applied to X.
-    :param y_funs: a Dict of name to functions applied to y.
-    :param save_ids: save indices of X as IDs.
-    :return: a class to summarize node properties.
-    """
-    X_funs = {} if X_funs is None else X_funs
-    Y_funs = {} if Y_funs is None else Y_funs
+class Node(object):
+    # A dictionary of attribute names to functions that calculate values from Y. Override
+    # this in the derived class.
+    Y_FUNS = {}
 
-    def _init(self, X, Y, feature, threshold, saved_ids=None, feature_name=None):
-        self.n_samples = len(X)
-        self.feature = feature
-        self.threshold = threshold
-        self.feature_name = feature_name
+    # Save indices when creating a node object:
+    SAVE_IDS = False
 
-        if save_ids:
-            self.saved_ids = saved_ids
+    def __init__(self,  X, Y, coeffs, threshold, saved_ids=None):
+        """
+        Our decision rule should look like
+           h = coeff[0]*feature[0] + coeff[1]*feature[1] + ... + coeff[p]*feature[p] <= threshold
 
-        for key, fun in X_funs.items():
-            self.__dict__[key] = fun(X)
-            
-        for key, fun in Y_funs.items():
+        where h represents a hyperplane in p dimensions. For a general nonlinear cut, we should
+        consider combinding this with kernel methods.
+
+        :param X, Y: numpy matrices
+        :param coeffs: numpy array or None
+        :param threshold: float or None
+        :param saved_ids: List of IDs
+        """
+        self.__dict__.update({
+            'n_samples': len(X),
+            'coeffs': coeffs,
+            'threshold': threshold,
+        })
+
+        if self.SAVE_IDS:
+            self.__dict__['saved_ids'] = saved_ids
+
+        for key, fun in self.Y_FUNS.items():
             self.__dict__[key] = fun(Y, axis=0)
 
-    def _which_branch(self, x_row):
+    def __setattr__(self, key, value):
+        raise AttributeError("can't set attribute")
+
+    def should_take_left(self, X):
         """
-        :param x_row: new sample (a row of X) to pass through the split point
-        :return: 'left' or 'right' indicating decision at split point
-            if feature is numeric: left means X feature value is < node split value
-                                   right means X feature >= node split
-            if feature is boolean: left means X[node.feature] is False, right -> True
-            if feature is category: left means X[node.feature] in node.threshold
+        if feature is numeric: left means X feature value is <= node split value
+                               right means X feature > node split
+        if feature is boolean: left means X[node.feature] is False, right -> True
+        if feature is category: left means X[node.feature] in node.threshold
+
+        :param X: numpy matrix
+        :return: Boolean numpy array
         """
-        if x_row[self.feature] <= self.threshold:
-            return 'left'
-        else:
-            return 'right'
+        return np.matmul(X, self.coeffs) <= self.threshold
 
-    def _is_leaf(self):
-        return self.feature is None
+    def is_leaf(self):
+        return self.coeffs is None
 
-    return type(class_name,
-                (object, ),
-                {
-                    '__init__': _init,
-                    'which_branch': _which_branch,
-                    'is_leaf': _is_leaf,
-                })
+    def get_label(self, pred_str, feature_names):
+        label = 'N Samples: {}\nAvg y: {}'.format(self.n_samples,
+                                                  getattr(self, pred_str))
+
+        if not self.is_leaf():
+            assert len(feature_names) == len(self.coeffs), \
+                'The length of feature_names should match the dimension of features.'
+
+            used_feature_names = [name for name, coeff in zip(feature_names, self.coeffs)
+                                  if coeff != 0.0]
+            label += '\n\nFeature: {}\nThreshold: {}'.format(used_feature_names,
+                                                             self.threshold)
+
+        return label
+
+"""
+Sample Node implementations:
+"""
 
 
-# Sample Node implementations:
-MeanNode = get_node_class('MeanNode', Y_funs={
-    'mean': np.mean,
-})
+class MeanNode(Node):
+    Y_FUNS = {
+        'mean': np.mean,
+    }
 
 
-MedianNode = get_node_class('MedianNode', Y_funs={
-    'median': np.median,
-})
+class MedianNode(Node):
+    Y_FUNS={
+        'median': np.median,
+    }
 
-MeanMedianAnalysisNode = get_node_class('MeanMedianAnalysisNode', save_ids=True, Y_funs={
-    'mean': np.mean,
-    'median': np.median,
-})
+class MeanMedianAnalysisNode(object):
+    SAVE_IDS=True
+    Y_FUNS={
+        'mean': np.mean,
+        'median': np.median,
+    }
