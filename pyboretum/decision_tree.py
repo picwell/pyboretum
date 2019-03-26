@@ -125,7 +125,7 @@ class DecisionTree(object):
     def _get_nodes_and_edges(self, node_id, max_depth):
         node, depth = self.tree.get_node(node_id)
 
-        if (node.is_leaf() or depth >= max_depth):
+        if node.is_leaf() or depth >= max_depth:
             return [node_id], []
         else:
             left_id, right_id = self.tree.get_children_ids(node_id)

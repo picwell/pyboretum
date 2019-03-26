@@ -20,6 +20,9 @@ class MAESplitter(Splitter):
         return 'median'
 
     def _get_binary_cutpoint(self, feature, y, min_samples_leaf):
+        """
+        Lower-case y is used since MAE splitter only supports univariate decision trees.
+        """
         best_cutpoint = .5
         left_y = y[feature <= best_cutpoint]
         right_y = y[feature > best_cutpoint]
@@ -31,6 +34,9 @@ class MAESplitter(Splitter):
         return best_cutpoint, mae
 
     def _get_ordered_cutpoint(self, feature, y, min_samples_leaf):
+        """
+        Lower-case y is used since MAE splitter only supports univariate decision trees.
+        """
         sorted_idx = np.argsort(feature)
         feature = feature[sorted_idx]
         y = y[sorted_idx]

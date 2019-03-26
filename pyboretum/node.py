@@ -2,8 +2,8 @@ import numpy as np
 
 
 class Node(object):
-    # A dictionary of attribute nomes to functions that calculate values for them. Override these
-    # in the derived class.
+    # A dictionary of attribute names to functions that calculate values from Y. Override
+    # this in the derived class.
     Y_FUNS = {}
 
     # Save indices when creating a node object:
@@ -12,12 +12,10 @@ class Node(object):
     def __init__(self,  X, Y, coeffs, threshold, saved_ids=None):
         """
         Our decision rule should look like
-           f = coeff[0]*feature[0] + coeff[1]*feature[1] + ... + coeff[p]*feature[p]
+           h = coeff[0]*feature[0] + coeff[1]*feature[1] + ... + coeff[p]*feature[p] <= threshold
 
-        Go to left if f <= threshold.
-
-        We will only allow hyperplane cuts. For a nonlinear cut, we should consider coupling this
-        with kernel methods.
+        where h represents a hyperplane in p dimensions. For a general nonlinear cut, we should
+        consider combinding this with kernel methods.
         """
         self.n_samples = len(X)
         self.coeffs = coeffs
