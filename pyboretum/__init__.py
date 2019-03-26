@@ -13,4 +13,4 @@ from .tree import (
     ListTree,
 )
 
-from .training_data import TrainingData
+from .training_data import TrainingData, ObliqueTrainingData

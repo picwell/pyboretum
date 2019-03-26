@@ -3,6 +3,7 @@ import pandas as pd
 
 from pyboretum import (
     TrainingData,
+    ObliqueTrainingData,
     MeanNode,
 )
 
@@ -67,3 +68,17 @@ def test_1d_Y_is_transformed_to_2d():
 
     training_data = TrainingData(X, y)
     assert training_data.Y.shape == (4, 1)
+
+
+def test_oblique_features_saved(training_data_1d):
+    X, Y = training_data_1d
+    if isinstance(X, pd.DataFrame):
+        oblique_feats = X.columns
+    else:
+        oblique_feats = list(range(X.shape[1]))
+
+    training_data = ObliqueTrainingData(X, Y, oblique_features=oblique_feats)
+    assert training_data.oblique_idxs == [0]
+
+    training_data = ObliqueTrainingData(X, Y, oblique_features=[])
+    assert training_data.oblique_idxs == []

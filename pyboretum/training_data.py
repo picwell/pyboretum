@@ -71,3 +71,21 @@ class TrainingData(object):
                                   self.X_names)
 
         return left_data, right_data
+
+
+class ObliqueTrainingData(TrainingData):
+    def __init__(self, X, Y, index=None, X_names=None, Y_names=None, oblique_features=None):
+        """
+        :param oblique_features: either the integer index of columns to include in oblique cuts, or, if X is a
+        dataframe, can pass column names.
+        """
+        super(ObliqueTrainingData, self).__init__(X, Y, index, X_names, Y_names)
+
+        if isinstance(X, pd.DataFrame):
+            missing_columns = [feat for feat in oblique_features if feat not in X.columns]
+            if missing_columns:
+                raise ValueError('Following columns are missing from X: {}'.format(missing_columns))
+
+            self.oblique_idxs = [X.columns.get_loc(col) for col in oblique_features]
+        else:
+            self.oblique_idxs = oblique_features

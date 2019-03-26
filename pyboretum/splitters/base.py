@@ -1,4 +1,5 @@
 import numpy as np
+from pyboretum.training_data import TrainingData
 
 
 def return_no_split():
@@ -19,6 +20,13 @@ class Splitter(object):
         Value kept in nodes that should be used for prediction by default.
         """
         raise NotImplementedError()
+
+    @property
+    def data_class(self):
+        """
+        Value kept in nodes that should be used for prediction by default.
+        """
+        return TrainingData
 
     def _get_binary_cutpoint(self, feature, Y, min_samples_leaf):
         """

@@ -5,7 +5,6 @@ import pandas as pd
 from pyboretum.splitters import MSESplitter
 from pyboretum.tree import LinkedTree
 from pyboretum.node import MeanNode
-from pyboretum.training_data import TrainingData
 
 
 class DecisionTree(object):
@@ -50,15 +49,15 @@ class DecisionTree(object):
             self._fit_core(splitter, left_id, left_node, left_data, depth + 1)
             self._fit_core(splitter, right_id, right_node, right_data, depth + 1)
 
-    def fit(self, X, Y, splitter=None):
+    def fit(self, X, Y, splitter=None, **kwargs):
         """
         How to do this without recursion??? where to store split feature/values? how to keep track of filtered X
         :param X:
         :param Y:
         :return:
         """
-        training_data = TrainingData(X, Y)
         splitter = MSESplitter() if splitter is None else splitter
+        training_data = splitter.data_class(X, Y, **kwargs)
 
         self.X_names = training_data.X_names
         self.Y_names = training_data.Y_names
