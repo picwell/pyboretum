@@ -142,19 +142,6 @@ class DecisionTree(object):
 
         return nodes, edges
 
-    def _get_node_label(self, node):
-        # TODO: Re-write this, likely as a method on node class, once we figure out node-pred_str interface
-        if node.is_leaf():
-            label = str('N Samples: {}\nAvg y: ${}'.format(node.n_samples,getattr(node, self.pred_str)))
-        else:
-            feature_names = [feature_name for feature_name, coeff in zip(self.X_names, node.coeffs) if coeff != 0.0]
-            label = str('N Samples: {}\nAvg y: ${}\n\nFeature: {}\nThreshold: {}'.format(node.n_samples,
-                                                                                         getattr(node, self.pred_str),
-                                                                                         feature_names,
-                                                                                         node.threshold)
-                        )
-        return label
-
     def visualize_tree(self, max_depth=float('inf')):
         dot = Digraph(graph_attr=dict(size="12,12"))
         nodes, edges = self.get_nodes_and_edges(max_depth)
@@ -168,10 +155,16 @@ class DecisionTree(object):
                 color = 'burlywood3'
             else:
                 color = 'burlywood'
-            dot.node(str(node_id), label=self._get_node_label(node), style='filled',
-                    shape=shape, color=color)
+            dot.node(str(node_id),
+                     label=node.get_label(self.pred_str, self.X_names),
+                     style='filled',
+                     shape=shape,
+                     color=color)
 
         for (e1, e2, label) in edges:
-            dot.edge(str(e1), str(e2), label=label, fontsize='25')
+            dot.edge(str(e1),
+                     str(e2),
+                     label=label,
+                     fontsize='25')
 
         return dot

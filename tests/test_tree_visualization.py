@@ -1,34 +1,7 @@
-import pandas as pd
-
 from pyboretum import (
     splitters,
     DecisionTree,
 )
-
-
-def test_get_node_label(training_data_1d):
-    X, y = training_data_1d
-
-    if isinstance(X, pd.DataFrame):
-        feature_names = [X.columns[0]]
-    else:
-        feature_names = [0]
-
-    tree = DecisionTree(min_samples_leaf=2)
-    tree.fit(X, y, splitter=splitters.MSESplitter())
-
-    root_id = tree.tree.get_root_id()
-
-    node, _ = tree.tree.get_node(root_id)
-    assert (tree._get_node_label(node) ==
-            'N Samples: 12\nAvg y: $[16.75]\n\nFeature: {}\nThreshold: 5.5'.format(feature_names))
-
-    # Get to a leaf node:
-    left_id, _ = tree.tree.get_children_ids(root_id)
-    left_id, _ = tree.tree.get_children_ids(left_id)
-
-    node, _ = tree.tree.get_node(left_id)
-    assert (tree._get_node_label(node) == 'N Samples: 3\nAvg y: $[15.]')
 
 
 def test_tree_returns_node_and_edges(training_data_1d):

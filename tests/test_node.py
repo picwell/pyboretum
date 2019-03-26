@@ -83,3 +83,18 @@ def test_which_branch(test_X, test_Y):
     assert node.which_branch(test_X.iloc[0]) == 'left'
     assert node.which_branch(test_X.iloc[1]) == 'left'
     assert node.which_branch(test_X.iloc[2]) == 'right'
+
+
+def test_get_label(test_X, test_Y):
+    # At leaf nodes:
+    node = MeanNode(test_X, test_Y, None, None)
+    assert node.get_label('mean', test_X.columns) == 'N Samples: 3\nAvg y: 4.0'
+
+    # At internal nodes:
+    node = MeanNode(test_X, test_Y, np.array([1.0, 0.0]), 2.5)
+    assert (node.get_label('mean', test_X.columns) ==
+            'N Samples: 3\nAvg y: 4.0\n\nFeature: {}\nThreshold: 2.5'.format([test_X.columns[0]]))
+
+    node = MeanNode(test_X, test_Y, np.array([0.0, 1.0]), 3.5)
+    assert (node.get_label('mean', test_X.columns) ==
+            'N Samples: 3\nAvg y: 4.0\n\nFeature: {}\nThreshold: 3.5'.format([test_X.columns[1]]))

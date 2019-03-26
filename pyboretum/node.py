@@ -44,8 +44,26 @@ class Node(object):
     def is_leaf(self):
         return self.coeffs is None
 
+    def get_label(self, pred_str, feature_names):
+        label = 'N Samples: {}\nAvg y: {}'.format(self.n_samples,
+                                                  getattr(self, pred_str))
 
-# Sample Node implementations:
+        if not self.is_leaf():
+            assert len(feature_names) == len(self.coeffs), \
+                'The length of feature_names should match the dimension of features.'
+
+            used_feature_names = [name for name, coeff in zip(feature_names, self.coeffs)
+                                  if coeff != 0.0]
+            label += '\n\nFeature: {}\nThreshold: {}'.format(used_feature_names,
+                                                             self.threshold)
+
+        return label
+
+"""
+Sample Node implementations:
+"""
+
+
 class MeanNode(Node):
     Y_FUNS = {
         'mean': np.mean,
