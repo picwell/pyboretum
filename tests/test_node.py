@@ -24,6 +24,13 @@ def test_Y():
                      index=['row_0', 'row_1', 'row_2'])
 
 
+def test_node_is_immutable(test_X, test_Y):
+    node = MeanNode(test_X, test_Y, None, None)
+    with pytest.raises(AttributeError) as e:
+        node.n_samples = 100
+    assert str(e.value) == "can't set attribute"
+
+
 def test_node_can_evaluate_mean_and_median(test_X, test_Y):
     class BasicNode(Node):
         Y_FUNS={
@@ -56,8 +63,8 @@ def test_node_stores_row_indices_from_X(test_X, test_Y):
     # TODO: can this definition be made simpler by building on top of MedianNode?
     class EnhancedNode(Node):
         Y_FUNS={
-                   'median': np.median,
-               }
+            'median': np.median,
+        }
         SAVE_IDS=True
 
     training_data = TrainingData(test_X, test_Y)

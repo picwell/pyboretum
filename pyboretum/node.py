@@ -22,15 +22,20 @@ class Node(object):
         :param threshold: float or None
         :param saved_ids: List of IDs
         """
-        self.n_samples = len(X)
-        self.coeffs = coeffs
-        self.threshold = threshold
+        self.__dict__.update({
+            'n_samples': len(X),
+            'coeffs': coeffs,
+            'threshold': threshold,
+        })
 
         if self.SAVE_IDS:
-            self.saved_ids = saved_ids
+            self.__dict__['saved_ids'] = saved_ids
 
         for key, fun in self.Y_FUNS.items():
             self.__dict__[key] = fun(Y, axis=0)
+
+    def __setattr__(self, key, value):
+        raise AttributeError("can't set attribute")
 
     def should_take_left(self, X):
         """
