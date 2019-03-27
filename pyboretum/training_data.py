@@ -89,3 +89,25 @@ class ObliqueTrainingData(TrainingData):
             self.oblique_idxs = [X.columns.get_loc(col) for col in oblique_features]
         else:
             self.oblique_idxs = oblique_features
+
+
+    def get_descendants(self, node):
+        mask = node.should_take_left(self.X)
+        left_data = ObliqueTrainingData(self.X[mask, :],
+                                        self.Y[mask, :],
+                                        self.index[mask],
+                                        self.X_names,
+                                        self.Y_names,
+                                        self.oblique_idxs
+                                        )
+
+        mask = ~mask
+        right_data = ObliqueTrainingData(self.X[mask, :],
+                                         self.Y[mask, :],
+                                         self.index[mask],
+                                         self.X_names,
+                                         self.Y_names,
+                                         self.oblique_idxs
+                                         )
+
+        return left_data, right_data
