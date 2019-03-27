@@ -21,6 +21,7 @@ class Splitter(object):
         """
         raise NotImplementedError()
 
+    @property
     def data_class(self):
         """
         Value kept in nodes that should be used for prediction by default.
