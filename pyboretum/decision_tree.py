@@ -49,6 +49,7 @@ class DecisionTree(object):
             return
         else:
             left_data, right_data = training_data.get_descendants(node)
+            del training_data
 
             left_node = self._build_node(splitter, left_data)
             right_node = self._build_node(splitter, right_data)
