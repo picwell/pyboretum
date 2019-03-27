@@ -21,7 +21,6 @@ class Splitter(object):
         """
         raise NotImplementedError()
 
-    @property
     def data_class(self):
         """
         Value kept in nodes that should be used for prediction by default.
@@ -62,7 +61,7 @@ class Splitter(object):
 
         return best_cutpoint, cost
 
-    def select_feature_to_cut(self, X, Y, min_samples_leaf):
+    def select_feature_to_cut(self, X, Y, min_samples_leaf, **kwargs):
         """
         This is a default implementation where the feature that gives the biggest gain when cut
         is chosen as the feature to cut.

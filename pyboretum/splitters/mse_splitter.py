@@ -83,4 +83,4 @@ class MSESplitter(Splitter):
         if self.inverse_covariance_matrix is None:
             self.inverse_covariance_matrix = np.identity(Y.shape[1])
 
-        return super(self.__class__, self).get_best_cutpoint(feature, Y, min_samples_leaf, **kwargs)
+        return super(MSESplitter, self).get_best_cutpoint(feature, Y, min_samples_leaf, **kwargs)
