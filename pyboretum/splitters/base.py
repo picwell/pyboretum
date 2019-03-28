@@ -62,7 +62,7 @@ class Splitter(object):
 
         return best_cutpoint, cost
 
-    def select_feature_to_cut(self, X, Y, min_samples_leaf, **kwargs):
+    def select_feature_to_cut(self, training_data, min_samples_leaf):
         """
         This is a default implementation where the feature that gives the biggest gain when cut
         is chosen as the feature to cut.
@@ -74,9 +74,10 @@ class Splitter(object):
         """
         best_idx = None
         best_cutpoint, best_cost = return_no_split()
+        n_features = training_data.X.shape[1]
 
-        for idx in range(X.shape[1]):
-            cutpoint, cost = self.get_best_cutpoint(X[:, idx], Y, min_samples_leaf)
+        for idx in range(n_features):
+            cutpoint, cost = self.get_best_cutpoint(training_data.X[:, idx], training_data.Y, min_samples_leaf)
             if cutpoint is not None and cost < best_cost:
                 best_idx = idx
                 best_cutpoint, best_cost = cutpoint, cost
@@ -85,5 +86,5 @@ class Splitter(object):
             return None, best_cutpoint, best_cost
 
         else:
-            coeffs = build_coeffs_for_orthogonal_cut(best_idx, X.shape[1])
+            coeffs = build_coeffs_for_orthogonal_cut(best_idx, n_features)
             return coeffs, best_cutpoint, best_cost

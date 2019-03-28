@@ -24,17 +24,8 @@ class DecisionTree(object):
         self.Y_names = None
 
     def _build_node(self, splitter, training_data):
-        # TODO: Talk to JH about how to properly do this. Does it make more sense to just have a single training
-        # class where we default oblique to {} if not provided to fit?
-        if isinstance(training_data, ObliqueTrainingData):
-            oblique_features = set(training_data.oblique_idxs)
-        else:
-            oblique_features = set()
-
-        coeffs, threshold, cost = splitter.select_feature_to_cut(training_data.X,
-                                                                 training_data.Y,
-                                                                 self.min_samples_leaf,
-                                                                 oblique_cuts=oblique_features)
+        coeffs, threshold, cost = splitter.select_feature_to_cut(training_data,
+                                                                 self.min_samples_leaf)
 
         # TODO: this needs to be enabled later when statistical tests are used to select variables.
         # if threshold is None:
