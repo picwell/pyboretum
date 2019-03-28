@@ -5,13 +5,11 @@ Fertile grounds to explore and analyze custom decision trees in Python
 
 ## Overview
 
-Mention the license
+All code in this package is licensed under the MIT License
 
 ## Getting Started
 
-We currently support a couple common tree parameters including `min_samples_leaf` and `max_depth`, which are declared at tree instantiation.  Additionally, we also specify the *node type*, which declares what data to calculate and store at each node (defaults to `MeanNode`).
-
-In this example, we'll use a small public dataset of red wine quality to demonstrate the basic pattern of training and inspecting decision tree.
+In this example, we'll use a small public dataset of red wine quality to demonstrate the basic pattern of training and inspecting a pyboretum decision tree.
 
 ```python
 from pyboretum import DecisionTree, MeanNode
@@ -24,7 +22,10 @@ dt = DecisionTree(min_samples_leaf=5, max_depth=5,
 Currently, pyboretum trees expect the data to be numeric (with plans to support string-encoded categorical features in the future).
 
 #### Specifying a Splitter
-When we fit a tree, in addition to passing `X` and `y` (our "features" and "target" data, respectively), we also specify a splitter (defaults to `MSESplitter`).  Each splitter will partition the data to optimize a different objective, and this is where users can create their own custom splitters tailored to a particular problem at hand.
+When we fit a tree, in addition to passing `X` and `y` (our "features" and "target" data, respectively), we also specify a splitter (defaults to `MSESplitter`).  
+Each splitter will partition the data to optimize a different objective, and this is where users can create their own custom splitters tailored to a particular problem at hand.
+
+The currently offered splitters are all for regression tasks, although the interface can easily be applied to classification tasks (and we welcome splitter contributions if you decide to create your own!)
 
 In the cells below, we will generate two different trees to minimize *mean squared error* and *mean absolute error*, two different splitters that are included out-of-the-box in pyboretum.
 
