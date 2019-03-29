@@ -7,13 +7,13 @@ Fertile grounds to explore and analyze custom decision trees in Python
 
 [TODO] ADD REFERENCES FOR CLARIFICATION AND JUSTIFICATION
 
-Decision trees, also known as recursive partitioning, are one of the most often used statistical/machine learning algorithm in practice, often as part of a random forest. They have gained wide popularity by offering robust performance over a wide range of regression and classification problems with little tuning of the hyperparameters. As a result, there are many implementation of decision tree algorithms in various programming languages, such as, `scikit-learn` in Python and `rpart` in R.
+Decision trees, also known as recursive partitioning, are one of the most often used statistical/machine learning algorithms in practice, often as part of a random forest. They have gained wide popularity by offering robust performance over a wide range of regression and classification problems with little tuning of the hyperparameters. As a result, there are many implementations of decision tree algorithms in various programming languages, such as, `scikit-learn` in Python and `rpart` in R.
 
-Although decision trees offer good performance out of the box, they are, in fact, a framework to create various different algorithms. The framework consists of a few distinct elements: (a) rules to identify cut variable; (b) rules to identify cut point; (c) rules to stop or prune; and (d) models to predict from nodes/partitions. There are numerous publications that change these elements to create decision trees tailored to problems of interest. However, `scikit-learn`, the most population decision tree implementation in Python, does not ways to customize the basic algorithm it offers. 
+Although decision trees offer good performance out of the box, they are, in fact, a framework to create various different algorithms. The framework consists of a few distinct elements: (a) rules to identify cut variable; (b) rules to identify cut point; (c) rules to stop or prune; and (d) models to predict from nodes/partitions. There are numerous publications that change these elements to create decision trees tailored to problems of interest. However, `scikit-learn`, the most popular decision tree implementation in Python, does not provide ways to customize the basic algorithm it offers. 
    
-_pyboretum_ solves this problem by offering an object-oriented programming framework to create your own decision tree algorithm and tools to analyze it in Python. Similar packages exist in other languages, for instance, like `partykit` in R. Such a custom algorithm can significantly improve how efficiently training data are used and lead to improve performance; further performance improvements can be also achieved by popular ensemble techniques like random forest or boosting.
+_pyboretum_ solves this problem by offering an object-oriented programming framework to create your own decision tree algorithm and tools to analyze it in Python. Similar packages exist in other languages, for instance, like `partykit` in R. Such a custom algorithm can significantly improve how efficiently training data are used and lead to improved performance; further performance improvements can be also achieved by popular ensemble techniques like random forest or boosting.
 
-The code currently focuses on regression problems, and we may support classificaiton problems in the future as well (we are open to contributions!). Note that the code base is under active development, and the class interface is still evolving. It is licensed under the MIT License (see [license file](LICENSE) for more information) and supports both Python 2.7 and 3.7.
+The code currently focuses on regression problems, and we may support classification problems in the future as well (we are open to contributions!). Note that the code base is under active development, and the class interface is still evolving. It is licensed under the MIT License (see [license file](LICENSE) for more information) and supports both Python 2.7 and 3.7.
 
 ## Installation
 
@@ -28,7 +28,7 @@ This will make _pyboretum_ available through `import`.
 ## Getting Started
 
 In this example, we will use a small public dataset of red wine quality to demonstrate the basic pattern of training and inspecting a _pyboretum_ decision tree. The key takeaways are
-* `Splitter` class can be customize to change the variable and cut-point selection rules. The example shows `MSESplitter` and `MAESplitter` that optimize for the weighted mean squared error (MSE) and mean absolute error (MAE), respectively.
+* `Splitter` class can be customized to change the variable and cut-point selection rules. The example shows `MSESplitter` and `MAESplitter` that optimize for the weighted mean squared error (MSE) and mean absolute error (MAE), respectively.
 * `Node` class can be customized to provide different predictions. The example shows `MeanNode` for MSE criterion and `MedianNode` for the MAE criterion.
 * `.visualize_tree()` creates a nice visualization of the decision rules
 
