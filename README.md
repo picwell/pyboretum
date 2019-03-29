@@ -35,7 +35,7 @@ In this example, we will use a small public dataset of red wine quality to demon
 [NOTE] DO YOU WANT TO INCLUDE THE VISUALIZATION CODE FOR PARTITIONS?
 
 ```python
-from pyboretum import DecisionTree, MeanNode
+from pyboretum import DecisionTree, MeanNode, splitters
 
 dt = DecisionTree(min_samples_leaf=5, max_depth=5,
 				  node_class=MeanNode)
@@ -53,7 +53,7 @@ In the cells below, we will generate two different trees to minimize MSE and MAE
 import pandas as pd
 data = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv', sep=';')
 y = data['quality']
-X[c for c in X.columns if c!='quality']
+X = data[[c for c in data.columns if c!='quality']]
 
 dt.fit(X, y, splitters.MSESplitter())
 dt.visualize_tree(max_depth=2)
