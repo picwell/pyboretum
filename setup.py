@@ -3,7 +3,7 @@ from setuptools import (
     find_packages,
 )
 
-__version__ = '0.4.0'
+__version__ = '0.3.1'
 
 setup(
     name='pyboretum',
