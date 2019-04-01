@@ -83,7 +83,7 @@ class MedianNode(Node):
         'median': np.median,
     }
 
-class MeanMedianAnalysisNode(object):
+class MeanMedianAnalysisNode(Node):
     SAVE_IDS=True
     Y_FUNS={
         'mean': np.mean,
